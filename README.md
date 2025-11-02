@@ -1,6 +1,6 @@
 # 🛒 REPO Shop Items Spawn in Level
 
-![R E P O](assets/gameplay.gif)
+![R E P O](https://raw.githubusercontent.com/Gamatek/REPOShopItemsSpawnInLevelPlus/main/assets/gameplay.gif)
 
 ## ✨ Overview
 
@@ -14,14 +14,14 @@ This mod is designed to work seamlessly in multiplayer. Only the host needs to h
 
 Found a valuable upgrade or drone during your run? Bring it to any extraction point, and it will be sucked up and automatically added to your bought Items! The item will be waiting for you in the Lobby Level to use in your next run.
 
-![image](assets/extraction-point.png)
+![image](https://raw.githubusercontent.com/Gamatek/REPOShopItemsSpawnInLevelPlus/main/assets/extraction-point.png)
 
 ## ⚙️ Configuration
 
 Configure the mod through the BepInEx config file.
 It is recommended to use the [REPOConfig](https://thunderstore.io/c/repo/p/nickklmao/REPOConfig) UI for easier configuration in-game.
 
-![image](assets/configuration.png)
+![image](https://raw.githubusercontent.com/Gamatek/REPOShopItemsSpawnInLevelPlus/main/assets/configuration.png)
 
 ### Upgrade Items
 
