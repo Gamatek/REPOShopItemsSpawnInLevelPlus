@@ -1,0 +1,101 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>REPOShopItemsSpawnInLevelPlus</AssemblyName>
+    <Product>Shop Items spawn in Level</Product>
+    <Version>1.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>REPOShopItemsSpawnInLevelPlus</RootNamespace>
+    <!-- Add debug symbol generation -->
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <!-- Post-build event to copy DLL to BepInEx scripts folder -->
+  <Target Name="CopyDLLToScriptsFolder" AfterTargets="Build">
+    <PropertyGroup>
+      <PluginFolder>C:\Users\mathi\AppData\Roaming\Thunderstore Mod Manager\DataFolder\REPO\profiles\Default\BepInEx\plugins\Gamatek-REPOShopItemsSpawnInLevelPlus</PluginFolder>
+    </PropertyGroup>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginFolder)" />
+    <Message Text="Copying $(TargetPath) to $(PluginFolder)" Importance="high" />
+  </Target>
+
+  <!-- Package files for Thunderstore.io -->
+  <Target Name="PackageThunderstoreMod" AfterTargets="Build">
+    <PropertyGroup>
+      <ThunderstoreDir>$(ProjectDir)Thunderstore</ThunderstoreDir>
+      <PackageDir>$(ThunderstoreDir)\package</PackageDir>
+      <ZipFile>$(ThunderstoreDir)\$(AssemblyName)-$(Version).zip</ZipFile>
+    </PropertyGroup>
+    
+    <!-- Create necessary directories -->
+    <MakeDir Directories="$(ThunderstoreDir)" Condition="!Exists('$(ThunderstoreDir)')" />
+    <MakeDir Directories="$(PackageDir)" Condition="!Exists('$(PackageDir)')" />
+    
+    <!-- Clean the package directory -->
+    <RemoveDir Directories="$(PackageDir)" />
+    <MakeDir Directories="$(PackageDir)" />
+    
+    <!-- Update manifest version to match project version -->
+    <Exec Command="powershell -Command &quot;$manifest = Get-Content -Raw '$(ProjectDir)manifest.json' | ConvertFrom-Json; $manifest.version_number = '$(Version)'; $manifest | ConvertTo-Json | Set-Content -Path '$(ProjectDir)manifest.json'&quot;" />
+    <Message Text="Updated manifest.json version to $(Version)" Importance="high" />
+    
+    <!-- Copy files to the package directory -->
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PackageDir)" />
+    <Copy SourceFiles="$(ProjectDir)manifest.json" DestinationFolder="$(PackageDir)" />
+    <Copy SourceFiles="$(ProjectDir)README.md" DestinationFolder="$(PackageDir)" />
+    <Copy SourceFiles="$(ProjectDir)icon.png" DestinationFolder="$(PackageDir)" Condition="Exists('$(ProjectDir)icon.png')" />
+    
+    <!-- Check if icon.png exists, if not, warn the user -->
+    <Warning Text="icon.png not found! This file is required for Thunderstore. Please add an icon.png file (256x256 PNG recommended)." 
+             Condition="!Exists('$(ProjectDir)icon.png')" />
+    
+    <!-- Create zip file using PowerShell -->
+    <Delete Files="$(ZipFile)" Condition="Exists('$(ZipFile)')" />
+    <Exec Command="powershell -Command &quot;Compress-Archive -Path '$(PackageDir)\*' -DestinationPath '$(ZipFile)' -Force&quot;" />
+    
+    <Message Text="Thunderstore package created at $(ZipFile)" Importance="high" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <!-- <PackageReference Include="UnityEngine.Modules" Version="5.6.0" IncludeAssets="compile" /> -->
+
+    <!-- Add the DLL reference here -->
+    <Reference Include="Assembly-CSharp">
+      <HintPath>D:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>D:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonUnityNetworking">
+      <HintPath>D:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\PhotonUnityNetworking.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonRealtime">
+      <HintPath>D:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\PhotonRealtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon3Unity3D">
+      <HintPath>D:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\Photon3Unity3D.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

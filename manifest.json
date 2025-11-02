@@ -1,0 +1,9 @@
+{
+    "name":  "REPOShopItemsSpawnInLevelPlus",
+    "description":  "Upgrade items may spawn in the level, now you can find upgrades while exploring instead of only being able to purchase them.",
+    "version_number":  "1.0.0",
+    "dependencies":  [
+                         "BepInEx-BepInExPack-5.4.2100"
+                     ],
+    "website_url":  "https://github.com/Gamatek/REPOShopItemsSpawnInLevelPlus"
+}
